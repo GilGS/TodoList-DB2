@@ -49,7 +49,7 @@ struct TodoList : TodoListAPI {
             }
             print("Connected to the database!")
             
-            let query = "SELECT * FROM todos WHERE ownerid=\(withUserID)"
+            let query = "SELECT COUNT(*) FROM todos WHERE ownerid=\(withUserID)"
             
             connection!.query(query: query) {
                 result, error in
