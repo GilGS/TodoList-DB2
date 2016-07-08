@@ -17,9 +17,35 @@
 import Foundation
 import TodoListAPI
 
+import IBMDB
+
 struct TodoList : TodoListAPI {
     
+    let db = IBMDB()
+    let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=awh-yp-small02.services.dal.bluemix.net;PORT=50000;PROTOCOL=TCPIP;UID=dash111703;PWD=eb0b4bde1722;"
+    
     func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
+        
+        db.connect(info: connString) { (error, connection) -> Void in
+            if error != nil {
+                print(error)
+            } else {
+                print("Connected to the database!")
+                
+                let query = "SELECT * FROM 'todos' WHERE 'ownerid'='bob'"
+                
+                connection!.query(query: query) { (result, error) -> Void in
+                    if error != nil {
+                        print(error)
+                    } else {
+                        print(result)
+                        
+                        oncompletion(1, nil)
+                    }
+                }
+                
+            }
+        }
         
     }
     
