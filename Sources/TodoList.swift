@@ -19,6 +19,20 @@ import TodoListAPI
 
 import IBMDB
 
+/**
+ 
+ The DB2/dashDB database should have a table with the following schema:
+ 
+ CREATE TABLE "todos"
+ (
+ "todoid" 	INT 			INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+ "title" 	VARCHAR(256) 	NOT NULL,
+ "ownerid" VARCHAR(128) 	NOT NULL,
+ "completed" INT 			NOT NULL,
+ "orderno"	INT 			NOT NULL
+ );
+*/
+
 struct TodoList : TodoListAPI {
     
     let db = IBMDB()
@@ -50,32 +64,40 @@ struct TodoList : TodoListAPI {
     }
     
     func clear(withUserID: String?, oncompletion: (ErrorProtocol?) -> Void) {
-        
+        let query = "DELETE from todos WHERE ownerid=\(withUserID)"
     }
     
     func clearAll(oncompletion: (ErrorProtocol?) -> Void) {
-        
+        let query = "TRUNCATE TABLE todos"
     }
     
     func get(withUserID: String?, oncompletion: ([TodoItem]?, ErrorProtocol?) -> Void) {
-        
+        let query = "SELECT * FROM todos WHERE ownerid=\(withUserID)"
     }
     
     func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
-        
+        let query = "SELECT * FROM todos WHERE ownerid=\(withUserID) AND todoid=\(withDocumentID)"
     }
     
     func add(userID: String?, title: String, order: Int, completed: Bool,
              oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
+        
+        let query = "INSERT INTO todos (title, ownerid, completed, orderno) VALUES (\(title), \(userID), \(completed), \(order));"
         
     }
     
     func update(documentID: String, userID: String?, title: String?, order: Int?,
                 completed: Bool?, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
         
+        // This requires a more selective update statement than just completed
+        
+        let query = "UPDATE todos SET completed=\(completed) WHERE todoid=\(documentID)"
+        
     }
     
     func delete(withUserID: String?, withDocumentID: String, oncompletion: (ErrorProtocol?) -> Void) {
+        
+        let query = "DELETE FROM todos WHERE ownerid=\(withUserID) AND todoid=\(withDocumentID)"
         
     }
     
