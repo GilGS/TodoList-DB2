@@ -40,25 +40,30 @@ struct TodoList : TodoListAPI {
     
     func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
         
-        db.connect(info: connString) { (error, connection) -> Void in
-            if error != nil {
+        db.connect(info: connString) {
+            error, connection in
+            
+            guard error == nil else {
                 print(error)
-            } else {
-                print("Connected to the database!")
-                
-                let query = "SELECT * FROM 'todos' WHERE 'ownerid'='bob'"
-                
-                connection!.query(query: query) { (result, error) -> Void in
-                    if error != nil {
-                        print(error)
-                    } else {
-                        print(result)
-                        
-                        oncompletion(1, nil)
-                    }
-                }
-                
+                return
             }
+            print("Connected to the database!")
+            
+            let query = "SELECT * FROM todos WHERE ownerid=\(withUserID)"
+            
+            connection!.query(query: query) {
+                result, error in
+                
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                print(result)
+                
+                oncompletion(1, nil)
+            }
+            
+            
         }
         
     }
