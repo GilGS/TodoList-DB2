@@ -284,12 +284,11 @@ struct TodoList : TodoListAPI {
                 let addedItem = TodoItem(documentID: result[0].value("todoid"), userID: user, order: order, title: title,
                                          completed: completedValue)
                 
-                oncompletion(result, nil)
-            }
-            
-            
+                oncompletion(addedItem, nil)
+            }     
+
         }
-        
+      
     }
     
     func update(documentID: String, userID: String?, title: String?, order: Int?,
