@@ -46,7 +46,7 @@ struct TodoList : TodoListAPI {
             error, connection in
             
             guard error == nil else {
-                oncompletion(nil, error)
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -55,7 +55,7 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             let query = "SELECT * FROM todos WHERE ownerid=\(userParameter)"
             
@@ -63,15 +63,12 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(nil, error)
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                guard let result = result else{
-                    //oncompletion error message
-                    return
-                }
-                //print(result)
+                
+                print(result)
                 
                 oncompletion(result.count, nil)
             }
@@ -89,7 +86,7 @@ struct TodoList : TodoListAPI {
             error, connection in
             
             guard error == nil else {
-                oncompletion(error)
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -98,7 +95,7 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             let query = "DELETE from todos WHERE ownerid=\(userParameter)"
             
@@ -106,7 +103,7 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(error)
+                    oncompletion(TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
@@ -119,13 +116,11 @@ struct TodoList : TodoListAPI {
     
     func clearAll(oncompletion: (ErrorProtocol?) -> Void) {
         
-        let userParameter = withUserID ?? "default"
-        
         db.connect(info: connString) {
             error, connection in
             
             guard error == nil else {
-                oncompletion(error)
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -134,7 +129,7 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             let query = "TRUNCATE TABLE todos"
             
@@ -142,7 +137,7 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(error)
+                    oncompletion(TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
@@ -159,10 +154,10 @@ struct TodoList : TodoListAPI {
         let userParameter = withUserID ?? "default"
         
         db.connect(info: connString) {
-            error, connection in
+            error, connection -> Void in
             
             guard error == nil else {
-                oncompletion(nil, error)
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -171,7 +166,7 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             let query = "SELECT * FROM todos WHERE ownerid=\(userParameter) ORDER BY orderno DESC"
             
@@ -179,21 +174,17 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(nil, error)
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                guard let result = result else{
-                    //oncompletion error message
-                    return
-                }
-                //print(result)
+                print(result)
                 
-                let todos = parseTodoItemList(result)
+                //let todos = try parseTodoItemList(dictionary: result)
+                //oncompletion(todos, nil)
+                oncompletion(nil, nil)
                 
-                oncompletion(todos, nil)
             }
-            
             
         }
     }
@@ -206,7 +197,7 @@ struct TodoList : TodoListAPI {
             error, connection in
             
             guard error == nil else {
-                oncompletion(nil, error)
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -215,27 +206,23 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
-            let query = "SELECT * FROM todos WHERE ownerid=\(withUserID) AND todoid=\(withDocumentID)"
+            let query = "SELECT * FROM todos WHERE ownerid=\(userParameter) AND todoid=\(withDocumentID)"
             
             connection.query(query: query) {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(nil, error)
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                guard let result = result else{
-                    //oncompletion error message
-                    return
-                }
-                //print(result)
+                print(result)
                 
-                let todos = parseTodoItemList(result)
-                
-                oncompletion(todos[0], nil)
+                //let todos = try parseTodoItemList(dictionary: result)
+                //oncompletion(todos[0], nil)
+                oncompletion(nil, nil)
             }
             
             
@@ -247,13 +234,13 @@ struct TodoList : TodoListAPI {
              oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
         
         
-        let userParameter = withUserID ?? "default"
+        let userParameter = userID ?? "default"
         
         db.connect(info: connString) {
             error, connection in
             
             guard error == nil else {
-                oncompletion(nil, error)
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -262,7 +249,7 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             
             let query = "INSERT INTO todos (title, ownerid, completed, orderno) VALUES(\(title), \(userID), \(completed), \(order));"
@@ -271,24 +258,20 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(nil, error)
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                guard let result = result else{
-                    //oncompletion error message
-                    return
-                }
                 //print(result)
-                
-                let addedItem = TodoItem(documentID: result[0].value("todoid"), userID: user, order: order, title: title,
-                                         completed: completedValue)
+                //result[0].value("todoid")  //TODO: How to get the value here?
+                let addedItem = TodoItem(documentID: String(1), userID: userParameter, order: order, title: title,
+                                         completed: completed)
                 
                 oncompletion(addedItem, nil)
-            }     
-
+            }
+            
         }
-      
+        
     }
     
     func update(documentID: String, userID: String?, title: String?, order: Int?,
@@ -300,19 +283,19 @@ struct TodoList : TodoListAPI {
         
         let user = userID ?? "default"
         
-        guard let title = title else {
+        if title == nil {
             fieldsToUpdate[0] = false
         }
         
-        guard let order = order else {
+        if order == nil {
             fieldsToUpdate[1] = false
         }
         
-        guard let completed = completed else {
+        if completed == nil {
             fieldsToUpdate[2] = false
         }
         
-        let query = "UPDATE todos SET"// completed=\(completed) WHERE todoid=\(documentID)"
+        var query = "UPDATE todos SET"// completed=\(completed) WHERE todoid=\(documentID)"
         
         for i in (0..<fieldsToUpdate.count) where fieldsToUpdate[i]{
             switch i {
@@ -322,6 +305,9 @@ struct TodoList : TodoListAPI {
                 query += "orderno=\(order)"
             case 2:
                 query += "completed=\(completed)"
+            default:
+                continue
+                
             }
             if (i != fieldsToUpdate.count - 1){
                 query += ","
@@ -334,7 +320,7 @@ struct TodoList : TodoListAPI {
             error, connection in
             
             guard error == nil else {
-                oncompletion(nil, error)
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -343,24 +329,20 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             connection.query(query: query) {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(nil, error)
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                guard let result = result else{
-                    //oncompletion error message
-                    return
-                }
-                //print(result)
+                print(result)
                 
-                let updatedItem = TodoItem(documentID: documentID, userID: user, order: order,
-                                         title: title, completed: completed)
+                let updatedItem = TodoItem(documentID: documentID, userID: user, order: order!,
+                                           title: title!, completed: completed!)
                 
                 oncompletion(updatedItem, nil)
             }
@@ -379,7 +361,7 @@ struct TodoList : TodoListAPI {
             error, connection in
             
             guard error == nil else {
-                oncompletion(error)
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -388,16 +370,16 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            //print("Connected to the database!")
+            print("Connected to the database!")
             
             
-            let query = "DELETE FROM todos WHERE ownerid=\(withUserID) AND todoid=\(withDocumentID)"
+            let query = "DELETE FROM todos WHERE ownerid=\(userParameter) AND todoid=\(withDocumentID)"
             
             connection.query(query: query) {
                 result, error in
                 
                 guard error == nil else {
-                    oncompletion(error)
+                    oncompletion(TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
@@ -409,20 +391,25 @@ struct TodoList : TodoListAPI {
         
     }
     
-    func parseTodoItemList(dictionary: NSDictionary) throws -> [TodoItem] {
+    func parseTodoItemList(dictionary: [[NSDictionary]]) throws -> [TodoItem] {
         
         var todos = [TodoItem]()
         for entry in dictionary {
             
-            guard let id = entry.value("todoid"), let user = entry.value("ownerid"),
-                let title = entry.value("title"), let completed = entry.value("completed"),
-                let order = entry.value("orderno") else{
-                    return nil
-                    
-            }
+            let user: String = "", id: String="", title: String="", completed: Bool=false, order: Int = 0
+            
+            //            guard let id = entry.value("todoid"),
+            //                let user = entry.value("ownerid"),
+            //                let title = entry.value("title"),
+            //                let completed = entry.value("completed"),
+            //                let order = entry.value("orderno")
+            //                else{
+            //                    return nil
+            //
+            //            }
             
             todos.append(TodoItem(documentID: id, userID: user, order: order, title: title,
-                                  completed: completedValue))
+                                  completed: completed))
             
         }
         return todos
