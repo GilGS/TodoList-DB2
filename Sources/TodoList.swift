@@ -25,7 +25,7 @@ import IBMDB
  
  CREATE TABLE "todos"
  (
- "todoid" 	INT 			INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+ "todoid" 	INT             NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
  "title" 	VARCHAR(256) 	NOT NULL,
  "ownerid" VARCHAR(128) 	NOT NULL,
  "completed" INT 			NOT NULL,
@@ -36,8 +36,12 @@ import IBMDB
 struct TodoList : TodoListAPI {
     
     let db = IBMDB()
-    let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=awh-yp-small02.services.dal.bluemix.net;PORT=50000;UID=dash111703;PWD=eb0b4bde1722"
+    let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=bluemix05.bluforcloud.com;PORT=50000;UID=dash012876;PWD=GZcBgcw99LTa"
     
+    //Our broken dashbd
+    //let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=awh-yp-small02.services.dal.bluemix.net;PORT=50000;UID=dash111703;PWD=eb0b4bde1722"
+    
+    //Greg's:
     //let connString = "DRIVER={DB2};DATABASE=BLUDB;UID=dash6435;PWD=0NKUFZxcskVZ;HOSTNAME=dashdb-entry-yp-dal09-09.services.dal.bluemix.net;PORT=50000"
     
     static let defaultHost = ""
@@ -83,7 +87,7 @@ struct TodoList : TodoListAPI {
             
             print("Connected to the database!")
             
-            let query = "SELECT * FROM todos WHERE ownerid=\(userParameter)"
+            let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\'"
             
             connection.query(query: query) {
                 result, error in
@@ -123,7 +127,7 @@ struct TodoList : TodoListAPI {
             
             print("Connected to the database!")
             
-            let query = "DELETE from todos WHERE ownerid=\(userParameter)"
+            let query = "DELETE from \"todos\" WHERE \"ownerid\"=\'\(userParameter)\'"
             
             connection.query(query: query) {
                 result, error in
@@ -157,7 +161,7 @@ struct TodoList : TodoListAPI {
             
             print("Connected to the database!")
             
-            let query = "TRUNCATE TABLE todos"
+            let query = "TRUNCATE TABLE \"todos\" IMMEDIATE"
             
             connection.query(query: query) {
                 result, error in
@@ -185,12 +189,6 @@ struct TodoList : TodoListAPI {
         db.connect(info: connString) {
             error, connection -> Void in
             
-            if error != nil {
-                print("***error! \(error)")
-            } else {
-                print("Connected to the database!")
-            }
-            
             guard error == nil else {
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
@@ -201,27 +199,29 @@ struct TodoList : TodoListAPI {
                 return
             }
             
-            print("Connected to the database!")
-            
-            let query = "SELECT * FROM todos WHERE ownerid=\(userParameter) ORDER BY orderno DESC"
+            let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\' ORDER BY \"orderno\" DESC"
             
             connection.query(query: query) {
-                result, error in
+                results, error in
                 
                 guard error == nil else {
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                print(result)
-                
-                //let todos = try parseTodoItemList(dictionary: result)
-                //oncompletion(todos, nil)
-                oncompletion(nil, nil)
+                do {
+                    let todos = try self.parseTodoItemList(results: results)
+                    oncompletion(todos, nil)
+                }
+                catch {
+                    
+                }
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 
             }
             
         }
+        oncompletion(nil, TodoCollectionError.ConnectionRefused)
     }
     
     func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
@@ -246,8 +246,6 @@ struct TodoList : TodoListAPI {
             
             let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\' AND \"todoid\"=\'\(withDocumentID)\'"
             
-            print("get query \(query)")
-            
             connection.query(query: query) {
                 results, error in
                 
@@ -256,8 +254,6 @@ struct TodoList : TodoListAPI {
                     return
                 }
                 
-                print("get result \(results)")
-                
                 do {
                     let todos = try self.parseTodoItemList(results: results)
                     oncompletion(todos[0], nil)
@@ -265,13 +261,11 @@ struct TodoList : TodoListAPI {
                 }catch {
                     
                 }
-                
-                //oncompletion(nil, nil)
             }
             
             
         }
-        
+        oncompletion(nil, TodoCollectionError.AuthError)
     }
     
     func add(userID: String?, title: String, order: Int, completed: Bool,
@@ -281,7 +275,7 @@ struct TodoList : TodoListAPI {
         
         let userParameter = userID ?? "default"
         
-        db.connect(info: connString) {
+        db.connect(info: connString){
             error, connection -> Void in
             
             guard error == nil else {
@@ -297,9 +291,8 @@ struct TodoList : TodoListAPI {
             
             let completedValue = completed ? 1 : 0
             
-            let query = "INSERT INTO \"todos\" (\"title\", \"ownerid\", \"completed\", \"orderno\") VALUES(\'\(title)\', \'\(userParameter)\', \(completedValue), \(order))"
-            
-            print("query: \(query)")
+            let query =
+                "INSERT INTO \"todos\" (\"title\", \"ownerid\", \"completed\", \"orderno\") VALUES(\'\(title)\', \'\(userParameter)\', \(completedValue), \(order))"
             
             connection.query(query: query) {
                 result, error in
@@ -323,6 +316,7 @@ struct TodoList : TodoListAPI {
                 }
             }
         }
+        oncompletion(nil, TodoCollectionError.AuthError)
     }
     
     func update(documentID: String, userID: String?, title: String?, order: Int?,
@@ -346,16 +340,16 @@ struct TodoList : TodoListAPI {
             fieldsToUpdate[2] = false
         }
         
-        var query = "UPDATE todos SET"// completed=\(completed) WHERE todoid=\(documentID)"
+        var query = "UPDATE \"todos\" SET"// completed=\(completed) WHERE todoid=\(documentID)"
         
         for i in (0..<fieldsToUpdate.count) where fieldsToUpdate[i]{
             switch i {
             case 0:
-                query += "title=\(title)"
+                query += "\"title\"=\'\(title)\'"
             case 1:
-                query += "orderno=\(order)"
+                query += "\"orderno\"=\(order)"
             case 2:
-                query += "completed=\(completed)"
+                query += "\"completed\"=\(completed)"
             default:
                 continue
                 
@@ -365,7 +359,7 @@ struct TodoList : TodoListAPI {
             }
         }
         
-        query += "WHERE todoid=\(documentID)"
+        query += "WHERE \"todoid\"=\'\(documentID)\'"
         
         db.connect(info: connString) {
             error, connection in
@@ -460,42 +454,33 @@ struct TodoList : TodoListAPI {
         
         var documentID: Int = 0, userID: String = "", title: String = "", orderno: Int = 0, completed: Int = 0
         
-//        print ("entry!! \(entry)")
-        
         for element in entry {
             if let e1 = element.value(forKey: "todoid"){
                 documentID = e1.intValue
-                print("found todoid")
                 continue
             }
             if let e2 = element.value(forKey: "ownerid") {
                 userID = e2 as! String
-                print("found ownerid: \(userID)")
                 continue
             }
             if let e3 = element.value(forKey: "title") {
                 title = e3 as! String
-                print("found title")
                 continue
             }
             if let e4 = element.value(forKey: "orderno") {
                 orderno = e4.intValue
-                print("found orderno")
                 continue
             }
             if let e5 = element.value(forKey: "completed") {
                 completed = e5.intValue
-                print("found completed")
                 continue
             }
             
         }
         
         let completedValue = false //completed == 1 ? true : false
-//
-//        print("found owneridbbbb: \(userID)")
         let todoItem = TodoItem(documentID: String(documentID), userID: userID, order: orderno, title: title, completed: completedValue)
-        print("newly created item: \(todoItem)")
+
         return todoItem
     }
     
