@@ -216,12 +216,12 @@ struct TodoList : TodoListAPI {
                 catch {
                     
                 }
-                oncompletion(nil, TodoCollectionError.ConnectionRefused)
+                
                 
             }
             
         }
-        oncompletion(nil, TodoCollectionError.ConnectionRefused)
+        
     }
     
     func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
@@ -234,7 +234,7 @@ struct TodoList : TodoListAPI {
             error, connection -> Void in
             
             guard error == nil else {
-                print("error: \(error)")
+                print(" connection error: \(error)")
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
@@ -244,11 +244,14 @@ struct TodoList : TodoListAPI {
                 return
             }
             
+            print("calling query")
+            
             let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\' AND \"todoid\"=\'\(withDocumentID)\'"
             
             connection.query(query: query) {
                 results, error in
                 
+                print("get results: \(results)")
                 guard error == nil else {
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
@@ -265,7 +268,7 @@ struct TodoList : TodoListAPI {
             
             
         }
-        oncompletion(nil, TodoCollectionError.AuthError)
+        
     }
     
     func add(userID: String?, title: String, order: Int, completed: Bool,
@@ -316,7 +319,6 @@ struct TodoList : TodoListAPI {
                 }
             }
         }
-        oncompletion(nil, TodoCollectionError.AuthError)
     }
     
     func update(documentID: String, userID: String?, title: String?, order: Int?,
