@@ -27,7 +27,9 @@
   
 6. Compile the application
 
-  `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
+  macOS: `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
+  
+  Linux: `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib -Xcc -fblocks`
   
 7. Run the test cases with swift test
 
