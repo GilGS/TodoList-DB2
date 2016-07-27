@@ -62,12 +62,12 @@ let databaseConfiguration: DatabaseConfiguration
 let todos: TodoList
 
 do {
-    if let service = try CloudFoundryEnv.getAppEnv().getService(spec: "TodoList-MySQL"){
-        Log.verbose("Found TodoList-MySQL")
+    if let service = try CloudFoundryEnv.getAppEnv().getService(spec: "TodoList-DB2"){
+        Log.verbose("Found TodoList-DB2")
         databaseConfiguration = DatabaseConfiguration(withService: service)
         todos = TodoList(databaseConfiguration)
     } else {
-        Log.info("Could not find Bluemix MySQL service")
+        Log.info("Could not find Bluemix DB2 service")
         todos = TodoList()
     }
     

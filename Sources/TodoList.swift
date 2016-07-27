@@ -33,42 +33,32 @@ import IBMDB
  );
  */
 
-struct TodoList : TodoListAPI {
+public class TodoList : TodoListAPI {
     
     let db = IBMDB()
     let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=bluemix05.bluforcloud.com;PORT=50000;UID=dash012876;PWD=GZcBgcw99LTa"
     
-    //Our broken dashbd
-    //let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=awh-yp-small02.services.dal.bluemix.net;PORT=50000;UID=dash111703;PWD=eb0b4bde1722"
-    
-    //Greg's:
-    //let connString = "DRIVER={DB2};DATABASE=BLUDB;UID=dash6435;PWD=0NKUFZxcskVZ;HOSTNAME=dashdb-entry-yp-dal09-09.services.dal.bluemix.net;PORT=50000"
-    
-    static let defaultHost = ""
+    static let defaultDriver = ""
+    static let defaultHostname = ""
     static let defaultPort : UInt16 = 50000
-    static let defaultHostname = "awh-yp-small02.services.dal.bluemix.net"
     static let defaultDatabase = "BLUDB"
-    static let defaultUsername = ""
-    static let defaultPassword = ""
+    static let defaultUid = ""
+    static let defaultPwd = ""
     
     public init(_ dbConfiguration: DatabaseConfiguration) {
         
-        print("in init1")
     }
     
-    public init(database: String = TodoList.defaultDatabase, host: String = TodoList.defaultHost,
+    public init(database: String = TodoList.defaultDatabase,
+                host: String = TodoList.defaultHostname,
                 port: UInt16 = TodoList.defaultPort,
-                username: String? = defaultUsername, password: String? = defaultPassword) {
+                username: String? = defaultUid,
+                password: String? = defaultPwd) {
         
-        print("in init2")
-        
+        //TODO build connection string from defaults
     }
     
-    public init() {
-        print("in init3")
-    }
-    
-    func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
+    public func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -81,11 +71,9 @@ struct TodoList : TodoListAPI {
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
-            
-            print("Connected to the database!")
             
             let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\'"
             
@@ -97,18 +85,12 @@ struct TodoList : TodoListAPI {
                     return
                 }
                 
-                
-                print(result)
-                
                 oncompletion(result.count, nil)
             }
-            
-            
         }
-        
     }
     
-    func clear(withUserID: String?, oncompletion: (ErrorProtocol?) -> Void) {
+    public func clear(withUserID: String?, oncompletion: (ErrorProtocol?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -121,11 +103,9 @@ struct TodoList : TodoListAPI {
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
-            
-            print("Connected to the database!")
             
             let query = "DELETE from \"todos\" WHERE \"ownerid\"=\'\(userParameter)\'"
             
@@ -139,12 +119,10 @@ struct TodoList : TodoListAPI {
                 
                 oncompletion(nil)
             }
-            
-            
         }
     }
     
-    func clearAll(oncompletion: (ErrorProtocol?) -> Void) {
+    public func clearAll(oncompletion: (ErrorProtocol?) -> Void) {
         
         db.connect(info: connString) {
             error, connection in
@@ -155,11 +133,9 @@ struct TodoList : TodoListAPI {
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
-            
-            print("Connected to the database!")
             
             let query = "TRUNCATE TABLE \"todos\" IMMEDIATE"
             
@@ -170,21 +146,14 @@ struct TodoList : TodoListAPI {
                     oncompletion(TodoCollectionError.ConnectionRefused)
                     return
                 }
-                
-                
                 oncompletion(nil)
             }
-            
-            
         }
     }
     
-    func get(withUserID: String?, oncompletion: ([TodoItem]?, ErrorProtocol?) -> Void) {
+    public func get(withUserID: String?, oncompletion: ([TodoItem]?, ErrorProtocol?) -> Void) {
         
         let userParameter = withUserID ?? "default"
-        
-        print(".... in getAll")
-        
         
         db.connect(info: connString) {
             error, connection -> Void in
@@ -195,7 +164,7 @@ struct TodoList : TodoListAPI {
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -214,19 +183,13 @@ struct TodoList : TodoListAPI {
                     oncompletion(todos, nil)
                 }
                 catch {
-                    
+                    oncompletion(nil, TodoCollectionError.ParseError)
                 }
-                
-                
             }
-            
         }
-        
     }
     
-    func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
-        
-        print(".... in get")
+    public func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
         
         let userParameter = withUserID ?? "default"
         
@@ -234,24 +197,20 @@ struct TodoList : TodoListAPI {
             error, connection -> Void in
             
             guard error == nil else {
-                print(" connection error: \(error)")
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
-            
-            print("calling query")
             
             let query = "SELECT * FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\' AND \"todoid\"=\'\(withDocumentID)\'"
             
             connection.query(query: query) {
                 results, error in
                 
-                print("get results: \(results)")
                 guard error == nil else {
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
@@ -262,19 +221,14 @@ struct TodoList : TodoListAPI {
                     oncompletion(todos[0], nil)
                     
                 }catch {
-                    
+                    oncompletion(nil, TodoCollectionError.ParseError)
                 }
             }
-            
-            
         }
-        
     }
     
-    func add(userID: String?, title: String, order: Int, completed: Bool,
+    public func add(userID: String?, title: String, order: Int, completed: Bool,
              oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
-        
-        print(".... in add")
         
         let userParameter = userID ?? "default"
         
@@ -282,13 +236,12 @@ struct TodoList : TodoListAPI {
             error, connection -> Void in
             
             guard error == nil else {
-                print("error: \(error)")
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
             
@@ -301,7 +254,6 @@ struct TodoList : TodoListAPI {
                 result, error in
                 
                 guard error == nil else {
-                    print ("error: \(error)")
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
@@ -313,94 +265,79 @@ struct TodoList : TodoListAPI {
                     let documentID = result1[0][0]["ID"]
                     
                     let addedItem = TodoItem(documentID: String(documentID!), userID: userParameter, order: order, title: title, completed: completed)
-                    
-                    print("new todo in add: \(addedItem)")
                     oncompletion(addedItem, nil)
                 }
             }
         }
     }
     
-    func update(documentID: String, userID: String?, title: String?, order: Int?,
+    public func update(documentID: String, userID: String?, title: String?, order: Int?,
                 completed: Bool?, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
-        
-        // This requires a more selective update statement than just completed
-        
-        var fieldsToUpdate : [Bool]  = [true, true, true]
         
         let user = userID ?? "default"
         
-        if title == nil {
-            fieldsToUpdate[0] = false
-        }
+        var originalTitle: String = "", originalOrder: Int = 0, originalCompleted: Bool = false
+        var titleQuery: String = "", orderQuery: String = "", completedQuery: String = ""
         
-        if order == nil {
-            fieldsToUpdate[1] = false
-        }
-        
-        if completed == nil {
-            fieldsToUpdate[2] = false
-        }
-        
-        var query = "UPDATE \"todos\" SET"// completed=\(completed) WHERE todoid=\(documentID)"
-        
-        for i in (0..<fieldsToUpdate.count) where fieldsToUpdate[i]{
-            switch i {
-            case 0:
-                query += "\"title\"=\'\(title)\'"
-            case 1:
-                query += "\"orderno\"=\(order)"
-            case 2:
-                query += "\"completed\"=\(completed)"
-            default:
-                continue
-                
-            }
-            if (i != fieldsToUpdate.count - 1){
-                query += ","
-            }
-        }
-        
-        query += "WHERE \"todoid\"=\'\(documentID)\'"
-        
-        db.connect(info: connString) {
-            error, connection in
+        get(withUserID: userID, withDocumentID: documentID){
+            todo, error in
             
-            guard error == nil else {
-                oncompletion(nil, TodoCollectionError.ConnectionRefused)
-                return
+            if let todo = todo {
+                originalTitle = todo.title
+                originalOrder = todo.order
+                originalCompleted = todo.completed
             }
             
-            guard let connection = connection else {
-                //oncompletion error message
-                return
+            let finalTitle = title ?? originalTitle
+            if (title != nil) {
+                titleQuery = " \"title\"=\'\(finalTitle)\',"
             }
             
-            print("Connected to the database!")
+            let finalOrder = order ?? originalOrder
+            if (order != nil) {
+                orderQuery = " \"orderno\"=\'\(finalOrder)\',"
+            }
             
-            connection.query(query: query) {
-                result, error in
+            let finalCompleted = completed ?? originalCompleted
+            if (completed != nil) {
+                let completedValue = finalCompleted ? 1 : 0
+                completedQuery = " \"completed\"=\'\(completedValue)\',"
+            }
+            
+            var concatQuery = titleQuery + orderQuery + completedQuery
+            
+            let query = "UPDATE \"todos\" SET" + String(concatQuery.characters.dropLast()) + " WHERE \"todoid\"=\'\(documentID)\'"
+            
+            self.db.connect(info: self.connString) {
+                error, connection in
                 
                 guard error == nil else {
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
                 }
                 
-                print(result)
+                guard let connection = connection else {
+                    oncompletion(nil, TodoCollectionError.ConnectionRefused)
+                    return
+                }
                 
-                let updatedItem = TodoItem(documentID: documentID, userID: user, order: order!,
-                                           title: title!, completed: completed!)
-                
-                oncompletion(updatedItem, nil)
+                connection.query(query: query) {
+                    result, error in
+                    
+                    guard error == nil else {
+                        oncompletion(nil, TodoCollectionError.ConnectionRefused)
+                        return
+                    }
+                    
+                    let updatedItem = TodoItem(documentID: documentID, userID: user, order: finalOrder,
+                                               title: finalTitle, completed: finalCompleted)
+                    oncompletion(updatedItem, nil)
+                }
             }
-            
-            
         }
-        
-        
     }
     
-    func delete(withUserID: String?, withDocumentID: String, oncompletion: (ErrorProtocol?) -> Void) {
+    public func delete(withUserID: String?, withDocumentID: String, oncompletion: (ErrorProtocol?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -413,12 +350,9 @@ struct TodoList : TodoListAPI {
             }
             
             guard let connection = connection else {
-                //oncompletion error message
+                oncompletion(TodoCollectionError.ConnectionRefused)
                 return
             }
-            
-            print("Connected to the database!")
-            
             
             let query = "DELETE FROM \"todos\" WHERE \"ownerid\"=\'\(userParameter)\' AND \"todoid\"=\'\(withDocumentID)\'"
             
@@ -432,10 +366,7 @@ struct TodoList : TodoListAPI {
                 
                 oncompletion(nil)
             }
-            
-            
         }
-        
     }
     
     private func parseTodoItemList(results: [[NSDictionary]]) throws -> [TodoItem] {
@@ -445,11 +376,9 @@ struct TodoList : TodoListAPI {
             
             let item: TodoItem = try createTodoItem(entry: entry)
             todos.append(item)
-            
         }
         
         return todos
-        
     }
     
     private func createTodoItem(entry: [NSDictionary]) throws -> TodoItem {
@@ -480,11 +409,10 @@ struct TodoList : TodoListAPI {
             
         }
         
-        let completedValue = false //completed == 1 ? true : false
+        let completedValue = completed == 1 ? true : false
         let todoItem = TodoItem(documentID: String(documentID), userID: userID, order: orderno, title: title, completed: completedValue)
-
+        
         return todoItem
     }
-    
 }
 
