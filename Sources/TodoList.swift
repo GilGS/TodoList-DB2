@@ -36,26 +36,38 @@ import IBMDB
 public class TodoList : TodoListAPI {
     
     let db = IBMDB()
-    let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=bluemix05.bluforcloud.com;PORT=50000;UID=dash012876;PWD=GZcBgcw99LTa"
+    let connString : String
     
-    static let defaultDriver = ""
-    static let defaultHostname = ""
-    static let defaultPort : UInt16 = 50000
+    static let defaultDriver = "{DB2}"
     static let defaultDatabase = "BLUDB"
+    static let defaultHostname = "bluemix05.bluforcloud.com"
+    static let defaultPort : UInt16 = 50000
     static let defaultUid = ""
     static let defaultPwd = ""
     
     public init(_ dbConfiguration: DatabaseConfiguration) {
         
+        let connStringArray = ["DRIVER="+TodoList.defaultDriver,
+                               "DATABASE="+TodoList.defaultDatabase,
+                               "HOSTNAME="+String(dbConfiguration.host),
+                               "PORT="+String(dbConfiguration.port),
+                               "UID="+String(dbConfiguration.username),
+                               "PWD="+String(dbConfiguration.password)]
+        
+        connString = connStringArray.joined(separator: ";")
+        
     }
     
-    public init(database: String = TodoList.defaultDatabase,
-                host: String = TodoList.defaultHostname,
+    public init(driver: String = TodoList.defaultDriver,
+                database: String = TodoList.defaultDatabase,
+                hostname: String = TodoList.defaultHostname,
                 port: UInt16 = TodoList.defaultPort,
-                username: String? = defaultUid,
-                password: String? = defaultPwd) {
+                uid: String = defaultUid,
+                pwd: String = defaultPwd) {
         
-        //TODO build connection string from defaults
+        let connStringArray = ["DRIVER="+driver, "DATABASE="+database, "HOSTNAME="+hostname, "PORT="+String(port), "UID="+uid, "PWD="+pwd]
+        connString = connStringArray.joined(separator: ";")
+
     }
     
     public func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
