@@ -7,9 +7,11 @@
 ## Quick start:
 
 1. Download and install the Swift 6-20 DEVELOPMENT snapshot
-2. Install dependencies with Homebrew
+2. Install dependencies:
 
-  `brew install wget unixodbc`
+  macOS: `brew install wget unixodbc`
+  
+  Linux: `sudo apt-get install -y clang unixodbc-dev unzip wget tar`
   
 3. Install the DB2 system driver:
 
@@ -23,7 +25,7 @@
 
   `git clone https://github.com/IBM-Swift/todolist-tests Tests`
   
-6. Compile the library
+6. Compile the application
 
   `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
   
