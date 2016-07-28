@@ -1,0 +1,12 @@
+declared-services:
+  TodoList-DB2:
+    label: dashdb
+    plan: entry
+applications:
+- name: TodoList-DB2
+  memory: 256M
+  instances: 2
+  random-route: true
+  services:
+  - TodoList-DB2
+  buildpack: https://github.com/IBM-Swift/swift-buildpack.git#develop
