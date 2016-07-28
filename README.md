@@ -5,7 +5,7 @@
 ## Table of Contents
 * [Summary](#summary)
 * [Installation](#installation)
-* [Setup DB2 service](#setup-db2-service-in-bluemix)
+* [Setup DB2 service](#setup-db2-service)
 * [Deploy to Bluemix](#deploy-to-bluemix)
 * [Compile and run tests](#compile-and-run-tests)
 
@@ -47,7 +47,34 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
   
   
 ##Setup DB2 service
+1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary)  
 
+2. Open the Bluemix catalog by clicking the blue hexagon '+' icon
+  ![DB2 service](Images/bluemix-console.png)
+
+3. Search for "DB2" and open the dashDB Database
+  ![DB2 service](Images/search-db2.png)
+
+4. Select your desired plan and click the Create button. 
+  ![DB2 service](Images/dashdb-plan.png)
+  You will now have a provisioned dashDB Database in your services.
+
+5. Open the newly created service in Bluemix, then open the dashDB dashboard. 
+
+6. Select "Tables" from the menu on the left, then click "Add Table" button. Enter the following DDL statement to create your TODOS table:
+
+  ```
+ CREATE TABLE "todos"
+ (
+  "todoid" INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+  "title"	VARCHAR(256) NOT NULL,
+  "ownerid" VARCHAR(128) NOT NULL,
+  "completed" INT NOT NULL,
+  "orderno" INT NOT NULL
+ );
+  ```
+
+  ![DB2 service](Images/create-table.png)
 
 ##Deploy to Bluemix
 1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
