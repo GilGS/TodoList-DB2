@@ -238,7 +238,7 @@ public class TodoList : TodoListAPI {
             }
         }
     }
-    
+
     public func add(userID: String?, title: String, order: Int, completed: Bool,
              oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
         
@@ -274,7 +274,18 @@ public class TodoList : TodoListAPI {
                 connection.query(query: selectQuery) {
                     result1, error1 in
                     
-                    let documentID = result1[0][0]["ID"]
+                    /*if self.isLinux{
+                        let documentID = result[0][0]["ID" as AnyObject]
+                    } else {
+                        let documentID = result1[0][0]["ID"]
+                    }*/
+                    
+                    #if os(OSX)
+                        let documentID = result1[0][0]["ID"]
+                        #else
+                        let documentID = result[0][0]["ID" as AnyObject]
+                        #endif
+                        
                     
                     let addedItem = TodoItem(documentID: String(documentID!), userID: userParameter, order: order, title: title, completed: completed)
                     oncompletion(addedItem, nil)
@@ -398,26 +409,50 @@ public class TodoList : TodoListAPI {
         var documentID: Int = 0, userID: String = "", title: String = "", orderno: Int = 0, completed: Int = 0
         
         for element in entry {
-            if let e1 = element.value(forKey: "todoid"){
-                documentID = e1.intValue
-                continue
-            }
-            if let e2 = element.value(forKey: "ownerid") {
-                userID = e2 as! String
-                continue
-            }
-            if let e3 = element.value(forKey: "title") {
-                title = e3 as! String
-                continue
-            }
-            if let e4 = element.value(forKey: "orderno") {
-                orderno = e4.intValue
-                continue
-            }
-            if let e5 = element.value(forKey: "completed") {
-                completed = e5.intValue
-                continue
-            }
+            #if os(OSX)
+                if let e1 = element.value(forKey: "todoid"){
+                    documentID = e1.intValue
+                    continue
+                }
+                if let e2 = element.value(forKey: "ownerid") {
+                    userID = e2 as! String
+                    continue
+                }
+                if let e3 = element.value(forKey: "title") {
+                    title = e3 as! String
+                    continue
+                }
+                if let e4 = element.value(forKey: "orderno") {
+                    orderno = e4.intValue
+                    continue
+                }
+                if let e5 = element.value(forKey: "completed") {
+                    completed = e5.intValue
+                    continue
+                }
+            
+            #else
+                if let e1 = element.valueForKey("todoid"){
+                    documentID = e1.intValue
+                    continue
+                }
+                if let e2 = element.valueForKey("ownerid") {
+                    userID = e2 as! String
+                    continue
+                }
+                if let e3 = element.valueForKey("title") {
+                    title = e3 as! String
+                    continue
+                }
+                if let e4 = element.valueForKey("orderno") {
+                    orderno = e4.intValue
+                    continue
+                }
+                if let e5 = element.valueForKey("completed") {
+                    completed = e5.intValue
+                    continue
+                }
+            #endif
             
         }
         
