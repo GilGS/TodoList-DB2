@@ -96,7 +96,18 @@ bluemix login -u username -o org_name -s space_name
 App started
 ```
 
+## Using Docker
 
+1. Install Docker on your operating system
+
+2. Build the Docker image:
+
+  `sudo docker build -t todolist-sqlite . `
+
+3. Run the web server:
+
+  `sudo docker run -p 8090:8090 -d todolist-sqlite`
+  
 ##Compile and run tests
 1. Clone the Tests to your project:
 
