@@ -283,7 +283,7 @@ public class TodoList : TodoListAPI {
                     #if os(OSX)
                         let documentID = result1[0][0]["ID"]
                         #else
-                        let documentID = result[0][0]["ID" as AnyObject]
+                        let documentID = result[0][0]["ID" as! AnyObject]
                         #endif
                         
                     
