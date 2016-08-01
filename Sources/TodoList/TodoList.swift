@@ -244,20 +244,20 @@ public class TodoList : TodoListAPI {
              oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
         
         let userParameter = userID ?? "default"
-        
+ 
         db.connect(info: connString){
             error, connection -> Void in
-            
+	               
             guard error == nil else {
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
-            
+             
             guard let connection = connection else {
                 oncompletion(nil, TodoCollectionError.ConnectionRefused)
                 return
             }
-            
+          
             let completedValue = completed ? 1 : 0
             
             let query =
@@ -265,7 +265,7 @@ public class TodoList : TodoListAPI {
             
             connection.query(query: query) {
                 result, error in
-                
+      
                 guard error == nil else {
                     oncompletion(nil, TodoCollectionError.ConnectionRefused)
                     return
@@ -274,17 +274,15 @@ public class TodoList : TodoListAPI {
                 let selectQuery = "SELECT IDENTITY_VAL_LOCAL() AS id FROM \"todos\""
                 connection.query(query: selectQuery) {
                     result1, error1 in
-                    
-                    /*if self.isLinux{
-                        let documentID = result[0][0]["ID" as AnyObject]
-                    } else {
-                        let documentID = result1[0][0]["ID"]
-                    }*/
-                    
+                              
+print("inside query closure 2")         
                     #if os(OSX)
                         let documentID = result1[0][0]["ID"]
                         #else
-                        let documentID = result[0][0]["ID" as! AnyObject]
+print("inside #else block")
+print("before test assignment")
+                        let documentID = result1[0][0]["ID" as! AnyObject]
+print("after let statement")
                         #endif
                         
                     
@@ -433,26 +431,26 @@ public class TodoList : TodoListAPI {
                 }
             
             #else
-                if let e1 = element["todoid" as! AnyObject]{
-                    documentID = e1 as! Int
+                /*if let e1 = element["todoid" as! AnyObject]{
+                    documentID = 1 //e1 as! Int
                     continue
                 }
                 if let e2 = element["ownerid" as! AnyObject] {
-                    userID = e2 as! String
+                    userID = "2" //e2 as! String
                     continue
                 }
                 if let e3 = element["title" as! AnyObject] {
-                    title = e3 as! String
+                    title = "3" //e3 as! String
                     continue
                 }
                 if let e4 = element["orderno" as! AnyObject] {
-                    orderno = e4 as! Int
+                    orderno = 4 //e4 as! Int
                     continue
                 }
                 if let e5 = element["completed" as! AnyObject] {
-                    completed = e5 as! Int
+                    completed = 5 // e5 as! Int
                     continue
-                }
+                }*/
             #endif
             
         }
