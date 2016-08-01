@@ -432,24 +432,24 @@ public class TodoList : TodoListAPI {
                 }
             
             #else
-                if let e1 = element.valueForKey("todoid"){
-                    documentID = e1.intValue
+                if let e1 = element["todoid" as! AnyObject]{
+                    documentID = e1 as! Int
                     continue
                 }
-                if let e2 = element.valueForKey("ownerid") {
+                if let e2 = element["ownerid" as! AnyObject] {
                     userID = e2 as! String
                     continue
                 }
-                if let e3 = element.valueForKey("title") {
+                if let e3 = element["title" as! AnyObject] {
                     title = e3 as! String
                     continue
                 }
-                if let e4 = element.valueForKey("orderno") {
-                    orderno = e4.intValue
+                if let e4 = element["orderno" as! AnyObject] {
+                    orderno = e4 as! Int
                     continue
                 }
-                if let e5 = element.valueForKey("completed") {
-                    completed = e5.intValue
+                if let e5 = element["completed" as! AnyObject] {
+                    completed = e5 as! Int
                     continue
                 }
             #endif
