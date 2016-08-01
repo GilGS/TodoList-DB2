@@ -274,18 +274,8 @@ public class TodoList : TodoListAPI {
                 let selectQuery = "SELECT IDENTITY_VAL_LOCAL() AS id FROM \"todos\""
                 connection.query(query: selectQuery) {
                     result1, error1 in
-                              
-print("inside query closure 2")         
-                    #if os(OSX)
-                        let documentID = result1[0][0]["ID"]
-                        #else
-print("inside #else block")
-print("before test assignment")
-                        let documentID = result1[0][0]["ID" as! AnyObject]
-print("after let statement")
-                        #endif
-                        
-                    
+             
+                    let documentID = result1[0][0]["ID"]                 
                     let addedItem = TodoItem(documentID: String(documentID!), userID: userParameter, order: order, title: title, completed: completed)
                     oncompletion(addedItem, nil)
                 }
@@ -408,9 +398,9 @@ print("after let statement")
         var documentID: Int = 0, userID: String = "", title: String = "", orderno: Int = 0, completed: Int = 0
         
         for element in entry {
-            #if os(OSX)
+            //#if os(OSX)
                 if let e1 = element["todoid"]{
-                    documentID = e1.intValue
+                    documentID = Int(e1 as! String)! 
                     continue
                 }
                 if let e2 = element["ownerid"] {
@@ -422,37 +412,13 @@ print("after let statement")
                     continue
                 }
                 if let e4 = element["orderno"] {
-                    orderno = e4.intValue
+                    orderno = Int(e4 as! String)!
                     continue
                 }
                 if let e5 = element["completed"] {
-                    completed = e5.intValue
+                    completed = Int(e5 as! String)!
                     continue
-                }
-            
-            #else
-                /*if let e1 = element["todoid" as! AnyObject]{
-                    documentID = 1 //e1 as! Int
-                    continue
-                }
-                if let e2 = element["ownerid" as! AnyObject] {
-                    userID = "2" //e2 as! String
-                    continue
-                }
-                if let e3 = element["title" as! AnyObject] {
-                    title = "3" //e3 as! String
-                    continue
-                }
-                if let e4 = element["orderno" as! AnyObject] {
-                    orderno = 4 //e4 as! Int
-                    continue
-                }
-                if let e5 = element["completed" as! AnyObject] {
-                    completed = 5 // e5 as! Int
-                    continue
-                }*/
-            #endif
-            
+                }     
         }
         
         let completedValue = completed == 1 ? true : false
