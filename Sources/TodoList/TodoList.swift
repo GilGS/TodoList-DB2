@@ -391,7 +391,7 @@ print("after let statement")
         }
     }
     
-    private func parseTodoItemList(results: [[NSDictionary]]) throws -> [TodoItem] {
+    private func parseTodoItemList(results: [[DB2Dictionary]]) throws -> [TodoItem] {
         
         var todos = [TodoItem]()
         for entry in results {
@@ -403,29 +403,29 @@ print("after let statement")
         return todos
     }
     
-    private func createTodoItem(entry: [NSDictionary]) throws -> TodoItem {
+    private func createTodoItem(entry: [DB2Dictionary]) throws -> TodoItem {
         
         var documentID: Int = 0, userID: String = "", title: String = "", orderno: Int = 0, completed: Int = 0
         
         for element in entry {
             #if os(OSX)
-                if let e1 = element.value(forKey: "todoid"){
+                if let e1 = element["todoid"]{
                     documentID = e1.intValue
                     continue
                 }
-                if let e2 = element.value(forKey: "ownerid") {
+                if let e2 = element["ownerid"] {
                     userID = e2 as! String
                     continue
                 }
-                if let e3 = element.value(forKey: "title") {
+                if let e3 = element["title"] {
                     title = e3 as! String
                     continue
                 }
-                if let e4 = element.value(forKey: "orderno") {
+                if let e4 = element["orderno"] {
                     orderno = e4.intValue
                     continue
                 }
-                if let e5 = element.value(forKey: "completed") {
+                if let e5 = element["completed"] {
                     completed = e5.intValue
                     continue
                 }
