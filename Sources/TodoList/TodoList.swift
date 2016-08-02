@@ -36,8 +36,8 @@ import IBMDB
 public class TodoList : TodoListAPI {
     
     let db = IBMDB()
-    let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=bluemix05.bluforcloud.com;PORT=50000;UID=dash012876;PWD=GZcBgcw99LTa"
-    //let connString : String
+    //let connString = "DRIVER={DB2};DATABASE=BLUDB;HOSTNAME=bluemix05.bluforcloud.com;PORT=50000;UID=dash012876;PWD=GZcBgcw99LTa"
+    let connString : String
     
     static let defaultDriver = "{DB2}"
     static let defaultDatabase = "BLUDB"
@@ -55,7 +55,7 @@ public class TodoList : TodoListAPI {
                                "UID="+String(dbConfiguration.username),
                                "PWD="+String(dbConfiguration.password)]
         
-        //connString = connStringArray.joined(separator: ";")
+        connString = connStringArray.joined(separator: ";")
         
     }
     
@@ -67,7 +67,7 @@ public class TodoList : TodoListAPI {
                 pwd: String = defaultPwd) {
         
         let connStringArray = ["DRIVER="+driver, "DATABASE="+database, "HOSTNAME="+hostname, "PORT="+String(port), "UID="+uid, "PWD="+pwd]
-        //connString = connStringArray.joined(separator: ";")
+        connString = connStringArray.joined(separator: ";")
 
     }
     

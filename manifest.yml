@@ -10,3 +10,5 @@ applications:
   services:
   - TodoList-DB2
   buildpack: https://github.com/IBM-Swift/swift-buildpack.git#develop
+  command: swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib
+
