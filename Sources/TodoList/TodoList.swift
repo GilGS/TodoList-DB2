@@ -43,8 +43,8 @@ public class TodoList : TodoListAPI {
     static let defaultDatabase = "BLUDB"
     static let defaultHostname = "bluemix05.bluforcloud.com"
     static let defaultPort : UInt16 = 50000
-    static let defaultUid = ""
-    static let defaultPwd = ""
+    static let defaultUid = "dash012876"
+    static let defaultPwd = "GZcBgcw99LTa"
     
     public init(_ dbConfiguration: DatabaseConfiguration) {
         

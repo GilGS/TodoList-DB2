@@ -96,7 +96,7 @@ WORKDIR $HOME
 COPY . $HOME
 
 # Compile the application
-RUN swift build -Xcc -fblocks --configuration release
+RUN swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib -Xcc -fblocks --configuration release
 
 EXPOSE 8090
 
