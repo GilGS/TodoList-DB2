@@ -102,11 +102,11 @@ App started
 
 2. Build the Docker image:
 
-  `sudo docker build -t todolist-sqlite . `
+  `sudo docker build -t todolist-db2 . `
 
 3. Run the web server:
 
-  `sudo docker run -p 8090:8090 -d todolist-sqlite`
+  `sudo docker run -p 8090:8090 -d todolist-db2`
   
 ##Compile and run tests
 1. Clone the Tests to your project:
