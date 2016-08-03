@@ -114,7 +114,7 @@ bluemix login -u username -o org_name -s space_name
 
 7. Push the Docker image: 
   
-  `docker push todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+  `docker push registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
 
 8. Create a [container bridge](https://console.ng.bluemix.net/docs/containers/troubleshoot/ts_ov_containers.html#ts_bridge_app) and bind the appropriate service to it
   
