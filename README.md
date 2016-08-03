@@ -76,26 +76,6 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
 
   ![DB2 service](Images/create-table.png)
 
-##Deploy to Bluemix
-1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
-
-2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
-```
-cf login
-bluemix api https://api.ng.bluemix.net
-bluemix login -u username -o org_name -s space_name
-```
-
-    Be sure to change the directory to the todolist-db2 directory where the manifest.yml file is located.
-
-3. Run `cf push`
-
-    #### Note: The uploading droplet stage should take several minutes. If it worked correctly, it should say:
-```
-2 of 2 instances running
-App started
-```
-
 ## Using Docker
 
 1. Install Docker on your operating system
@@ -107,6 +87,47 @@ App started
 3. Run the web server:
 
   `sudo docker run -p 8090:8090 -d todolist-db2`
+  
+##Deploy to Bluemix
+1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
+
+2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
+```
+cf login
+bluemix api https://api.ng.bluemix.net
+bluemix login -u username -o org_name -s space_name
+```
+
+3. Download and install the [IBM Container's Plugin] (https://console.ng.bluemix.net/docs/containers/container_cli_cfic_install.html)
+
+    Be sure to change the directory to the todolist-db2 directory where the manifest.yml file is located.
+
+4. Build the Docker image:
+
+  `sudo docker build -t todolist-db2 . `
+  
+5. Log into cf ic
+   
+  `cf ic login`
+  
+6. Tag the Docker image:
+
+  `docker tag todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+
+7. Push the Docker image: 
+  
+  `docker push todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+
+8. Create a [container bridge](https://console.ng.bluemix.net/docs/containers/troubleshoot/ts_ov_containers.html#ts_bridge_app) and bind the appropriate service to it
+  
+  `cf bind_service <CONTAINER_BRIDGE_NAME> <DB2_SERVICE_NAME>`
+
+9. Create the IBM Container:
+ 
+ `cf ic group create -e "CCS_BIND_APP=containerbridge"-e "CCS_BIND_SRV=<DB2_SERVICE_NAME>"-n todolist-db2 --name todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+
+10. If done correctly, todolist database should be accessible from the public URL created in step 9 (this can be viewed in the Bluemix console by clicking into the created container)
+
   
 ##Compile and run tests
 1. Clone the Tests to your project:
