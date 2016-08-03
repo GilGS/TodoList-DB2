@@ -100,8 +100,6 @@ bluemix login -u username -o org_name -s space_name
 
 3. Download and install the [IBM Container's Plugin] (https://console.ng.bluemix.net/docs/containers/container_cli_cfic_install.html)
 
-    Be sure to change the directory to the todolist-db2 directory where the manifest.yml file is located.
-
 4. Build the Docker image:
 
   `sudo docker build -t todolist-db2 . `
