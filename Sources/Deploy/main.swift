@@ -29,12 +29,13 @@ Log.logger = HeliumLogger()
 let todos: TodoList
 
 do {
-    if let service = try CloudFoundryEnv.getAppEnv().getService(spec: "TodoList-DB2"){
+    if let service = try CloudFoundryEnv.getAppEnv().getService(spec: "dashDB"){
         
         let driver: String, database: String, hostname: String, port: UInt16, uid: String, pwd: String
         
+        driver = "{DB2}"
+        
         if let credentials = service.credentials{
-            driver = credentials["driver"].stringValue
             database = credentials["db"].stringValue
             hostname = credentials["host"].stringValue
             port = UInt16(credentials["port"].stringValue)!
@@ -42,7 +43,6 @@ do {
             pwd = credentials["password"].stringValue
             
         } else {
-            driver = "{DB2}"
             database = "BLUDB"
             hostname = "bluemix05.bluforcloud.com"
             port = 50000
