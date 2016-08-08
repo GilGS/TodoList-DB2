@@ -1,5 +1,6 @@
 # TodoList DB2 backend
 
+[![Build Status](https://travis-ci.org/IBM-Swift/TodoList-DB2.svg?branch=master)](https://travis-ci.org/IBM-Swift/TodoList-DB2)
 [![Swift 3 6-06](https://img.shields.io/badge/Swift%203-6/20 SNAPSHOT-blue.svg)](https://swift.org/download/#snapshots)
 
 ## Table of Contents
