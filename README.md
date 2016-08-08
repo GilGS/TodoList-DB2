@@ -122,7 +122,7 @@ bluemix login -u username -o org_name -s space_name
 
 9. Create the IBM Container:
  
- `cf ic group create -e "CCS_BIND_APP=containerbridge"-e "CCS_BIND_SRV=<DB2_SERVICE_NAME>"-n todolist-db2 --name todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+ `cf ic group create -e "CCS_BIND_APP=containerbridge" -e "CCS_BIND_SRV=dashDB" -n todolist-db2 --name todolist-db2 registry.ng.bluemix.net/swiftdo/todolist-db2`
 
 10. If done correctly, todolist database should be accessible from the public URL created in step 9 (this can be viewed in the Bluemix console by clicking into the created container)
 
