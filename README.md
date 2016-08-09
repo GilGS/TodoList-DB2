@@ -117,16 +117,23 @@ bluemix login -u username -o org_name -s space_name
   
   `docker push registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
 
-8. Create a [container bridge](https://console.ng.bluemix.net/docs/containers/troubleshoot/ts_ov_containers.html#ts_bridge_app) and bind the appropriate service to it
-  
-  `cf bind_service <CONTAINER_BRIDGE_NAME> <DB2_SERVICE_NAME>`
-
-9. Create the IBM Container:
+8. Go to Bluemix and click on `All Items`
  
- `cf ic group create -e "CCS_BIND_APP=containerbridge" -e "CCS_BIND_SRV=dashDB" -n todolist-db2 --name todolist-db2 registry.ng.bluemix.net/swiftdo/todolist-db2`
+  ![DB2 Service](Images/ConsoleHome.png)
 
-10. If done correctly, todolist database should be accessible from the public URL created in step 9 (this can be viewed in the Bluemix console by clicking into the created container)
+9. Click on the `+` sign to create a new Container
+  
+  ![DB2 Service](Images/ContainerHome.png)
 
+10. Select the Docker image that was pushed in Step 7 
+
+  ![DB2 Service](Images/ContainerImages.png)
+
+11. Configure the Container as follows (Make sure to switch from `Single` to `Scalable Group` near the top of the page)
+
+  ![DB2 Service](Images/ContainerSettings.png)
+
+12. Create the Container. If done correctly, the Container group's URL will have the database's info.
   
 ##Compile and run tests
 1. Clone the Tests to your project:
