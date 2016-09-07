@@ -50,10 +50,10 @@ public class TodoList : TodoListAPI {
         
         let connStringArray = ["DRIVER="+TodoList.defaultDriver,
                                "DATABASE="+TodoList.defaultDatabase,
-                               "HOSTNAME="+String(dbConfiguration.host),
-                               "PORT="+String(dbConfiguration.port),
-                               "UID="+String(dbConfiguration.username),
-                               "PWD="+String(dbConfiguration.password)]
+                               "HOSTNAME="+String(describing: dbConfiguration.host),
+                               "PORT="+String(describing: dbConfiguration.port),
+                               "UID="+String(describing: dbConfiguration.username),
+                               "PWD="+String(describing: dbConfiguration.password)]
         
         connString = connStringArray.joined(separator: ";")
         
@@ -71,7 +71,7 @@ public class TodoList : TodoListAPI {
 
     }
     
-    public func count(withUserID: String?, oncompletion: (Int?, ErrorProtocol?) -> Void) {
+    public func count(withUserID: String?, oncompletion: @escaping (Int?, Error?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -103,7 +103,7 @@ public class TodoList : TodoListAPI {
         }
     }
     
-    public func clear(withUserID: String?, oncompletion: (ErrorProtocol?) -> Void) {
+    public func clear(withUserID: String?, oncompletion: @escaping (Error?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -135,7 +135,7 @@ public class TodoList : TodoListAPI {
         }
     }
     
-    public func clearAll(oncompletion: (ErrorProtocol?) -> Void) {
+    public func clearAll(oncompletion: @escaping (Error?) -> Void) {
         
         db.connect(info: connString) {
             error, connection in
@@ -164,7 +164,7 @@ public class TodoList : TodoListAPI {
         }
     }
     
-    public func get(withUserID: String?, oncompletion: ([TodoItem]?, ErrorProtocol?) -> Void) {
+    public func get(withUserID: String?, oncompletion: @escaping ([TodoItem]?, Error?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -202,7 +202,7 @@ public class TodoList : TodoListAPI {
         }
     }
     
-    public func get(withUserID: String?, withDocumentID: String, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
+    public func get(withUserID: String?, withDocumentID: String, oncompletion: @escaping (TodoItem?, Error?) -> Void ) {
         
         let userParameter = withUserID ?? "default"
         
@@ -241,7 +241,7 @@ public class TodoList : TodoListAPI {
     }
 
     public func add(userID: String?, title: String, order: Int, completed: Bool,
-             oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
+             oncompletion: @escaping (TodoItem?, Error?) -> Void ) {
         
         let userParameter = userID ?? "default"
  
@@ -284,7 +284,7 @@ public class TodoList : TodoListAPI {
     }
     
     public func update(documentID: String, userID: String?, title: String?, order: Int?,
-                completed: Bool?, oncompletion: (TodoItem?, ErrorProtocol?) -> Void ) {
+                completed: Bool?, oncompletion: @escaping (TodoItem?, Error?) -> Void ) {
         
         let user = userID ?? "default"
         
@@ -349,7 +349,7 @@ public class TodoList : TodoListAPI {
         }
     }
     
-    public func delete(withUserID: String?, withDocumentID: String, oncompletion: (ErrorProtocol?) -> Void) {
+    public func delete(withUserID: String?, withDocumentID: String, oncompletion: @escaping (Error?) -> Void) {
         
         let userParameter = withUserID ?? "default"
         
@@ -400,23 +400,23 @@ public class TodoList : TodoListAPI {
         for element in entry {
             //#if os(OSX)
                 if let e1 = element["todoid"]{
-                    documentID = Int(e1 as! String)! 
+                    documentID = Int(e1 )! 
                     continue
                 }
                 if let e2 = element["ownerid"] {
-                    userID = e2 as! String
+                    userID = e2 
                     continue
                 }
                 if let e3 = element["title"] {
-                    title = e3 as! String
+                    title = e3 
                     continue
                 }
                 if let e4 = element["orderno"] {
-                    orderno = Int(e4 as! String)!
+                    orderno = Int(e4 )!
                     continue
                 }
                 if let e5 = element["completed"] {
-                    completed = Int(e5 as! String)!
+                    completed = Int(e5 )!
                     continue
                 }     
         }
