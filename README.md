@@ -1,7 +1,8 @@
 # TodoList DB2 backend
 
 [![Build Status](https://travis-ci.org/IBM-Swift/TodoList-DB2.svg?branch=master)](https://travis-ci.org/IBM-Swift/TodoList-DB2)
-[![Swift 3 9-06](https://img.shields.io/badge/Swift%203-9/06 SNAPSHOT-blue.svg)](https://swift.org/download/#snapshots)
+![](https://img.shields.io/badge/Swift-3.0%20RELEASE-orange.svg?style=flat)
+![](https://img.shields.io/badge/platform-Linux,%20macOS-blue.svg?style=flat)
 
 ## Table of Contents
 * [Summary](#summary)
@@ -15,7 +16,9 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
 
 ## Installation:
 
-1. Download and install the [Swift DEVELOPMENT 09-06 snapshot](https://swift.org/download/#snapshots) Make sure you update your toolchain and path, as described in the install instructions.
+1. Install [Swift 3](http://www.swift.org)
+
+  [XCode 8](http://www.developer.apple.com/xcode) if on macOS or the toolchain if on Linux
 
 2. Install dependencies:
 
