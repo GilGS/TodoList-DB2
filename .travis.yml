@@ -6,7 +6,6 @@ services:
 
 before_install:
   - wget https://swift.org/builds/development/ubuntu1404/swift-DEVELOPMENT-SNAPSHOT-2016-09-07-a/swift-DEVELOPMENT-SNAPSHOT-2016-09-07-a-ubuntu14.04.tar.gz 
-  - where clang
   - tar xzvf swift-DEVELOPMENT-SNAPSHOT-2016-09-07-a-ubuntu14.04.tar.gz
   - export PATH=swift-DEVELOPMENT-SNAPSHOT-2016-09-07-a-ubuntu14.04/usr/bin:$PATH
   - sudo apt-get -y install clang-3.8 unixodbc-dev unzip wget tar
