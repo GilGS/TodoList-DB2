@@ -14,5 +14,5 @@ before_install:
   - git clone https://github.com/IBM-Swift/todolist-tests Tests
 
 script:
-    - swift build
+    - swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib
     - swift test
