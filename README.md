@@ -1,7 +1,8 @@
 # TodoList DB2 backend
 
 [![Build Status](https://travis-ci.org/IBM-Swift/TodoList-DB2.svg?branch=master)](https://travis-ci.org/IBM-Swift/TodoList-DB2)
-[![Swift 3 9-06](https://img.shields.io/badge/Swift%203-9/06 SNAPSHOT-blue.svg)](https://swift.org/download/#snapshots)
+![](https://img.shields.io/badge/Swift-3.0%20RELEASE-orange.svg?style=flat)
+![](https://img.shields.io/badge/platform-Linux,%20macOS-blue.svg?style=flat)
 
 ## Table of Contents
 * [Summary](#summary)
@@ -15,7 +16,9 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
 
 ## Installation:
 
-1. Download and install the [Swift DEVELOPMENT 09-06 snapshot](https://swift.org/download/#snapshots) Make sure you update your toolchain and path, as described in the install instructions.
+1. Install [Swift 3](http://www.swift.org)
+
+  [XCode 8](http://www.developer.apple.com/xcode) if on macOS or the toolchain if on Linux
 
 2. Install dependencies:
 
@@ -30,10 +33,6 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
 
   `wget https://github.com/IBM-DTeam/swift-for-db2-cli/archive/master.zip && unzip master.zip && cd swift-for-db2-cli-master && sudo ./cli.sh && . env.sh && cd .. && rm -f master.zip && rm -rf swift-for-db2-cli-master`
   
-4. (Linux only) Clone, build and install the libdispatch library. The complete instructions for building and installing this library are here, though, all you need to do is just this: 
-
- `git clone -b experimental/foundation https://github.com/apple/swift-corelibs-libdispatch.git && cd swift-corelibs-libdispatch && git submodule init && git submodule update && sh ./autogen.sh && ./configure --with-swift-toolchain=<path-to-swift>/usr --prefix=<path-to-swift>/usr && make && make install`
-  
 5. Clone the repository:
  
   `git clone https://github.com/IBM-Swift/todolist-db2`
@@ -44,7 +43,7 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
   `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
   
   Linux: 
-  `swift build -Xcc -fblocks -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
+  `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
   
   
 ##Setup DB2 service
@@ -136,6 +135,7 @@ bluemix login -u username -o org_name -s space_name
 12. Create the Container. If done correctly, the Container group's URL will have the database's info.
   
 ##Compile and run tests
+
 1. Clone the Tests to your project:
 
   `git clone https://github.com/IBM-Swift/todolist-tests Tests`
@@ -146,7 +146,7 @@ bluemix login -u username -o org_name -s space_name
   `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
   
   Linux: 
-  `swift build -Xcc -fblocks -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
+  `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
 
 3. Run the tests:
 

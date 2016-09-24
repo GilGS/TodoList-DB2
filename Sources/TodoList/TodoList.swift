@@ -240,7 +240,7 @@ public class TodoList : TodoListAPI {
         }
     }
 
-    public func add(userID: String?, title: String, order: Int, completed: Bool,
+    public func add(userID: String?, title: String, rank order: Int, completed: Bool,
              oncompletion: @escaping (TodoItem?, Error?) -> Void ) {
         
         let userParameter = userID ?? "default"
@@ -276,14 +276,14 @@ public class TodoList : TodoListAPI {
                     result1, error1 in
              
                     let documentID = result1[0][0]["ID"]                 
-                    let addedItem = TodoItem(documentID: String(documentID!), userID: userParameter, order: order, title: title, completed: completed)
+                    let addedItem = TodoItem(documentID: String(documentID!), userID: userParameter, rank: order, title: title, completed: completed)
                     oncompletion(addedItem, nil)
                 }
             }
         }
     }
     
-    public func update(documentID: String, userID: String?, title: String?, order: Int?,
+    public func update(documentID: String, userID: String?, title: String?, rank order: Int?,
                 completed: Bool?, oncompletion: @escaping (TodoItem?, Error?) -> Void ) {
         
         let user = userID ?? "default"
@@ -296,7 +296,7 @@ public class TodoList : TodoListAPI {
             
             if let todo = todo {
                 originalTitle = todo.title
-                originalOrder = todo.order
+                originalOrder = todo.rank
                 originalCompleted = todo.completed
             }
             
@@ -341,7 +341,7 @@ public class TodoList : TodoListAPI {
                         return
                     }
                     
-                    let updatedItem = TodoItem(documentID: documentID, userID: user, order: finalOrder,
+                    let updatedItem = TodoItem(documentID: documentID, userID: user, rank: finalOrder,
                                                title: finalTitle, completed: finalCompleted)
                     oncompletion(updatedItem, nil)
                 }
@@ -422,7 +422,7 @@ public class TodoList : TodoListAPI {
         }
         
         let completedValue = completed == 1 ? true : false
-        let todoItem = TodoItem(documentID: String(documentID), userID: userID, order: orderno, title: title, completed: completedValue)
+        let todoItem = TodoItem(documentID: String(documentID), userID: userID, rank: orderno, title: title, completed: completedValue)
         
         return todoItem
     }
