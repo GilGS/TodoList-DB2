@@ -15,4 +15,4 @@ before_install:
 
 script:
     - swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib
-    - swift test
+#    - swift test
