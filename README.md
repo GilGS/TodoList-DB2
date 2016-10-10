@@ -89,6 +89,8 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
   `sudo docker run -p 8090:8090 -d todolist-db2`
   
 ##Deploy to Bluemix
+To deploy this app to Bluemix, you have to build and a deploy a Docker image with the app.
+
 1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
 
 2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
