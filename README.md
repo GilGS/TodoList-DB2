@@ -94,12 +94,13 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
 
 2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
-```
-cf login
-bluemix api https://api.ng.bluemix.net
-bluemix login -u username -o org_name -s space_name
-```
 
+  `cf login`
+  
+  `bluemix api https://api.ng.bluemix.net`
+  
+  `bluemix login -u username -o org_name -s space_name`
+  
 3. Download and install the [IBM Container's Plugin] (https://console.ng.bluemix.net/docs/containers/container_cli_cfic_install.html)
 
 4. Build the Docker image:
