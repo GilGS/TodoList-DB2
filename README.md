@@ -105,21 +105,23 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
   
 3. Download and install the [IBM Container's Plugin] (https://console.ng.bluemix.net/docs/containers/container_cli_cfic_install.html)
 
-4. Build the Docker image:
+4. [Configure the IBM Container's Plugin](https://console.ng.bluemix.net/docs/containers/container_cli_login.html) - set your IBM Container Namespace.
+  
+5. Login into cf ic
+  
+  `cf ic login`
+  
+5. Build the Docker image:
 
   `sudo docker build -t todolist-db2 . `
   
-5. Log into cf ic
-   
-  `cf ic login`
-  
 6. Tag the Docker image:
 
-  `docker tag todolist-db2 registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+  `docker tag todolist-db2 registry.ng.bluemix.net/<NAMESPACE FROM STEP 5>/todolist-db2`
 
 7. Push the Docker image: 
   
-  `docker push registry.ng.bluemix.net/<ORGANIZATION_NAME>/todolist-db2`
+  `docker push registry.ng.bluemix.net/<NAMESPACE FROM STEP 5>/todolist-db2`
 
 8. Go to Bluemix and click on `All Items`
  
