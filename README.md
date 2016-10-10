@@ -93,7 +93,9 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 
 1. Login to your [Bluemix](https://new-console.ng.bluemix.net/?direct=classic) account (create an account, if necessary) 
 
-2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
+2. Download and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html).
+
+3. Login to Bluemix CLI
 
   `cf login`
   
