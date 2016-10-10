@@ -140,7 +140,9 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
   ![DB2 Service](Images/ContainerSettings.png)
 
 12. Create the Container. If done correctly, the Container group's URL will have the database's info.
-  
+
+13. The URL of the app appears in the "Routes" field of the Container Overview
+
 ##Compile and run tests
 
 1. Clone the Tests to your project:
