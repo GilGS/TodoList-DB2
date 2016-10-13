@@ -143,23 +143,15 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 
 13. The URL of the app appears in the "Routes" field of the Container Overview
 
-##Compile and run tests
+##Test
 
 1. Clone the Tests to your project:
 
   `git clone https://github.com/IBM-Swift/todolist-tests Tests`
 
-2. Build the project: 
+2. Run the tests:
 
-  macOS: 
-  `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
-  
-  Linux: 
-  `swift build -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
-
-3. Run the tests:
-
-  `swift test`
+  `swift test -Xcc -I/usr/local/include -Xlinker -L/usr/local/lib`
 
 
 
