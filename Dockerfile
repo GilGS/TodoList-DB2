@@ -21,7 +21,8 @@ MAINTAINER IBM Swift Engineering at IBM Cloud
 LABEL Description="Linux Ubuntu 14.04 image with the Swift binaries and DB2 driver"
 
 # Set environment variables for image
-ENV SWIFT_SNAPSHOT swift-DEVELOPMENT-SNAPSHOT-2016-06-20-a
+ENV SWIFT_SNAPSHOT swift-3.0-RELEASE
+ENV SWIFT_SNAPSHOT_LOWERCASE swift-3.0-release
 ENV UBUNTU_VERSION ubuntu14.04
 ENV UBUNTU_VERSION_NO_DOTS ubuntu1404
 ENV HOME /root
@@ -55,26 +56,17 @@ RUN apt-get update && apt-get install -y \
   openssl \
   libssl-dev \
   unixodbc-dev \
-  wget 
+  wget
 
 # Install Swift compiler
-RUN wget https://swift.org/builds/development/$UBUNTU_VERSION_NO_DOTS/$SWIFT_SNAPSHOT/$SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz \
+RUN wget https://swift.org/builds/$SWIFT_SNAPSHOT_LOWERCASE/$UBUNTU_VERSION_NO_DOTS/$SWIFT_SNAPSHOT/$SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz \
   && tar xzvf $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz \
-  && rm $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz
+    && rm $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz
+
 ENV PATH $WORK_DIR/$SWIFT_SNAPSHOT-$UBUNTU_VERSION/usr/bin:$PATH
 
 # Hack to force usage of the gold linker
 RUN rm /usr/bin/ld && ln -s /usr/bin/ld.gold /usr/bin/ld
-
-# Clone and install swift-corelibs-libdispatch
-RUN git clone -b $LIBDISPATCH_BRANCH https://github.com/apple/swift-corelibs-libdispatch.git \
-  && cd swift-corelibs-libdispatch \
-  && git submodule init \
-  && git submodule update \
-  && sh ./autogen.sh \
-  && CFLAGS=-fuse-ld=gold ./configure --with-swift-toolchain=$WORK_DIR/$SWIFT_SNAPSHOT-$UBUNTU_VERSION/usr --prefix=$WORK_DIR/$SWIFT_SNAPSHOT-$UBUNTU_VERSION/usr \
-  && make \
-  && make install
 
 # Set the DB2 driver environment variables
 ENV IBM_DB_DIR /usr/local/ibmdb
@@ -82,13 +74,13 @@ ENV IBM_DB_HOME /usr/local/ibmdb
 ENV IBM_DB_LIB /usr/local/ibmdb/lib
 ENV IBM_DB_INCLUDE /usr/local/ibmdb/include
 ENV DB2_HOME /usr/local/ibmdb/include
-ENV DB2LIB /usr/local/ibmdb/lib 
+ENV DB2LIB /usr/local/ibmdb/lib
 
 
 COPY db2-driver $HOME/db2-driver
 
 WORKDIR db2-driver
-RUN ./cli.sh 
+RUN ./cli.sh
 
 WORKDIR $HOME
 
