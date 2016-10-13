@@ -16,7 +16,7 @@
 
 # Dockerfile to build a Docker image with the Swift binaries and its dependencies.
 
-FROM ubuntu:14.04
+FROM ibmcom/swift-ubuntu:latest
 MAINTAINER IBM Swift Engineering at IBM Cloud
 LABEL Description="Linux Ubuntu 14.04 image with the Swift binaries and DB2 driver"
 
@@ -34,36 +34,7 @@ WORKDIR ${WORK_DIR}
 
 # Linux OS utils
 RUN apt-get update && apt-get install -y \
-  automake \
-  build-essential \
-  clang \
-  curl \
-  gcc-4.8 \
-  git \
-  g++-4.8 \
-  libblocksruntime-dev \
-  libbsd-dev \
-  libglib2.0-dev \
-  libpython2.7 \
-  libicu-dev \
-  libkqueue-dev \
-  libtool \
-  lsb-core \
-  openssh-client \
-  wget \
-  binutils-gold \
-  libcurl4-openssl-dev \
-  openssl \
-  libssl-dev \
-  unixodbc-dev \
-  wget
-
-# Install Swift compiler
-RUN wget https://swift.org/builds/$SWIFT_SNAPSHOT_LOWERCASE/$UBUNTU_VERSION_NO_DOTS/$SWIFT_SNAPSHOT/$SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz \
-  && tar xzvf $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz \
-    && rm $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz
-
-ENV PATH $WORK_DIR/$SWIFT_SNAPSHOT-$UBUNTU_VERSION/usr/bin:$PATH
+  unixodbc-dev
 
 # Hack to force usage of the gold linker
 RUN rm /usr/bin/ld && ln -s /usr/bin/ld.gold /usr/bin/ld
