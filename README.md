@@ -76,6 +76,11 @@ A [Swift DB2](https://github.com/IBM-DTeam/swift-for-db2) implementation of the 
 
   ![DB2 service](Images/create-table.png)
 
+## Run the app locally
+Change the default parameters in Sources/TodoList/TodoList.swift to the parameters of your DB2 instance - hostname, port, uid and password.
+
+The parameters of your DB2 instance can be checked in your dashDB settings, "Service Credentials" section.
+
 ## Using Docker
 
 1. Install Docker on your operating system
