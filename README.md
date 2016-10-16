@@ -146,9 +146,14 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 
   ![DB2 Service](Images/ContainerSettings.png)
 
-12. Create the Container. If done correctly, the Container group's URL will have the database's info.
+12. Create the Container. 
 
 13. The URL of the app appears in the "Routes" field of the Container Overview
+![Container Routes](Images/ContainerOverview.png)
+
+14. Now you can test and access your app by the URL from step 15. In particular, when accessing the app's URL, a list of currently existing todo items will be returned. Note that you must not to append the port to the URL, the default ports will be used. (The port 8090 that you specified in step 12 is used by Bluemix to access your app and is mapped to the default HTTP/HTTPS ports.)
+
+
 
 ##Test
 
