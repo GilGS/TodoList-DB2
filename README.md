@@ -142,7 +142,7 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 
   ![DB2 Service](Images/ContainerImages.png)
 
-11. Configure the Container as follows (Make sure to switch from `Single` to `Scalable Group` near the top of the page)
+11. Configure the Container as follows. Make sure to switch from `Single` to `Scalable Group` and to set HTTP port to 8090 (the your app listens to).
 
   ![DB2 Service](Images/ContainerSettings.png)
 
