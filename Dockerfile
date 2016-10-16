@@ -47,10 +47,10 @@ ENV IBM_DB_INCLUDE /usr/local/ibmdb/include
 ENV DB2_HOME /usr/local/ibmdb/include
 ENV DB2LIB /usr/local/ibmdb/lib
 
+# get swift db2 cli
+RUN git clone https://github.com/IBM-DTeam/swift-for-db2-cli $HOME/db2-driver
 
-COPY db2-driver $HOME/db2-driver
-
-WORKDIR db2-driver
+WORKDIR $HOME/db2-driver
 RUN ./cli.sh
 
 WORKDIR $HOME
