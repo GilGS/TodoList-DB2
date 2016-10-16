@@ -142,16 +142,16 @@ To deploy this app to Bluemix, you have to build and a deploy a Docker image wit
 
   ![DB2 Service](Images/ContainerImages.png)
 
-11. Configure the Container as follows. Make sure to switch from `Single` to `Scalable Group` and to set HTTP port to 8090 (the your app listens to).
+11. Configure the Container as follows. Make sure to switch from `Single` to `Scalable Group` and to set HTTP port to 8090 (the your app listens to)
 
   ![DB2 Service](Images/ContainerSettings.png)
 
-12. Create the Container. 
+12. Create the Container 
 
 13. The URL of the app appears in the "Routes" field of the Container Overview
 ![Container Routes](Images/ContainerOverview.png)
 
-14. Now you can test and access your app by the URL from step 15. In particular, when accessing the app's URL, a list of currently existing todo items will be returned. Note that you must not to append the port to the URL, the default ports will be used. (The port 8090 that you specified in step 12 is used by Bluemix to access your app and is mapped to the default HTTP/HTTPS ports.)
+14. Now you can test and access your app by the URL from step 15. In particular, when accessing the app's URL, a list of currently existing todo items will be returned. Note that you must not to append the port to the URL, the default ports will be used. (The port 8090 that you specified in step 13 is used by Bluemix to access your app and is mapped to the default HTTP/HTTPS ports)
 
 
 
